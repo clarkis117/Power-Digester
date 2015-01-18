@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{55850B67-E566-4117-863E-8EB06892466D}</ProjectGuid>
+    <ProjectGuid>{0265CA91-7CB3-4B07-A91A-9EC66CD9ED16}</ProjectGuid>
     <Keyword>ManagedCProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -19,13 +19,13 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CLRSupport>true</CLRSupport>
+    <CLRSupport>Pure</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CLRSupport>true</CLRSupport>
+    <CLRSupport>Pure</CLRSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -73,15 +73,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\AssemblyInfo.cpp" />
-    <ClCompile Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\File Digester.cpp" />
+    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="File Digester.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\File Digester.h" />
-    <ClInclude Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\resource.h" />
+    <ClInclude Include="File Digester.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\app.rc" />
+    <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

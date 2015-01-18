@@ -15,23 +15,23 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\AssemblyInfo.cpp">
+    <ClCompile Include="AssemblyInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\File Digester.cpp">
+    <ClCompile Include="File Digester.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\File Digester.h">
+    <ClInclude Include="File Digester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\resource.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\documents\visual studio 2013\projects\get-faces\file digester\app.rc">
+    <ResourceCompile Include="app.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

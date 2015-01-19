@@ -2,6 +2,8 @@
     DYNAMIC LINK LIBRARY : Power Digester Project Overview
 ========================================================================
 
+The project is focused on making a cmdlet that provides the ability to Hash various objects like files.
+
 AppWizard has created this File Digester DLL for you.  
 
 This file contains a summary of what you will find in each of the files that

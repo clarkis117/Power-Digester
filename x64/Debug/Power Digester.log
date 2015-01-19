@@ -1,18 +1,5 @@
-﻿Build started 1/17/2015 20:48:07.
-     1>Project "F:\F_user_files\Documents\GitHub\Power-Digester\Power Digester.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /Zi /clr:pure /nologo /W3 /WX- /Od /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D POWERDIGESTER_EXPORTS /D _WINDLL /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll" /errorReport:prompt /clr:nostdlib AssemblyInfo.cpp "File Digester.cpp"
-         AssemblyInfo.cpp
-         File Digester.cpp
-         Generating Code...
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"F:\F_user_files\Documents\GitHub\Power-Digester\x64\Debug\Power Digester.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\F_user_files\Documents\GitHub\Power-Digester\x64\Debug\Power Digester.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X64 /DLL x64\Debug\app.res
-         x64\Debug\AssemblyInfo.obj
-         "x64\Debug\File Digester.obj"
-         "x64\Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
-         Power Digester.vcxproj -> F:\F_user_files\Documents\GitHub\Power-Digester\x64\Debug\Power Digester.dll
-     1>Done Building Project "F:\F_user_files\Documents\GitHub\Power-Digester\Power Digester.vcxproj" (Build target(s)).
+﻿Build started 1/19/2015 18:22:28.
 
 Build succeeded.
 
-Time Elapsed 00:00:00.50
+Time Elapsed 00:00:00.00

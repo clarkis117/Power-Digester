@@ -1,0 +1,23 @@
+ImageRuntimeVersion: v4.0.30319
+Assembly Power Digester, Version=1.0.*, Culture=Invariant Language (Invariant Country): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Class FileDigester.FileDigest: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Management.Automation.PSCmdlet
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    System.String HashAlg 'get set' : 
+    System.IO.FileInfo File 'get set' : 
+    System.String FilePath 'get set' : 
+  Methods:
+    get_FilePath(): PrivateScope, Public, HideBySig, SpecialName
+    set_FilePath(String): PrivateScope, Public, HideBySig, SpecialName
+    get_File(): PrivateScope, Public, HideBySig, SpecialName
+    set_File(FileInfo): PrivateScope, Public, HideBySig, SpecialName
+    get_HashAlg(): PrivateScope, Public, HideBySig, SpecialName
+    set_HashAlg(String): PrivateScope, Public, HideBySig, SpecialName

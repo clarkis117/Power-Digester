@@ -1,5 +1,5 @@
 ========================================================================
-    DYNAMIC LINK LIBRARY : File Digester Project Overview
+    DYNAMIC LINK LIBRARY : Power Digester Project Overview
 ========================================================================
 
 AppWizard has created this File Digester DLL for you.  

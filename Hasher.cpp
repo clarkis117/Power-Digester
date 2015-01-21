@@ -31,6 +31,16 @@ Hasher::Hasher(System::String^% HashAlg, array<System::Byte>^% BytesToHash)
 	this->BytesToHash = BytesToHash;
 }
 
+Hasher^ Hasher::update(System::IO::Stream^% Stream)
+{
+	return this;
+}
+
+Hasher^ Hasher::update(cli::array<System::Byte>^% Bytes)
+{
+	return this;
+}
+
 cli::array<System::Byte>^ Hasher::ComputeHash()
 {
 	try

@@ -4,7 +4,7 @@
 
 using namespace FileDigester;
 
-void FileDigest::BeginProcessing(void)
+void Digest::BeginProcessing(void)
 {
 	ErrorStrings^ BeginProcessingErrors = gcnew ErrorStrings;
 	try
@@ -79,7 +79,7 @@ void FileDigest::BeginProcessing(void)
 	}
 }
 
-void FileDigest::ProcessRecord(void)
+void Digest::ProcessRecord(void)
 {
 	ErrorStrings^ ProcessErrors = gcnew ErrorStrings;
 	try
@@ -173,17 +173,17 @@ void FileDigest::ProcessRecord(void)
 }
 
 //These two where not implemented because they were not needed in cleanup or error handling 
-void FileDigest::EndProcessing(void)
+void Digest::EndProcessing(void)
 {
 
 }
 
-void FileDigest::StopProcessing(void)
+void Digest::StopProcessing(void)
 {
 
 }
 
-System::IO::FileStream^ FileDigest::Get_Open_File_Stream(System::String^ Path)
+System::IO::FileStream^ Digest::Get_Open_File_Stream(System::String^ Path)
 {
 	System::IO::FileStream^ FiletoHash;
 	try
@@ -218,7 +218,7 @@ System::IO::FileStream^ FileDigest::Get_Open_File_Stream(System::String^ Path)
 	}
 }
 
-array<System::Byte>^ FileDigest::MD5_Hash_File(System::IO::Stream^% FiletoHash)
+array<System::Byte>^ Digest::MD5_Hash_File(System::IO::Stream^% FiletoHash)
 {
 	try
 	{
@@ -241,7 +241,7 @@ array<System::Byte>^ FileDigest::MD5_Hash_File(System::IO::Stream^% FiletoHash)
 	}
 }
 
-array<System::Byte>^ FileDigest::SHA1_Hash_File(System::IO::FileStream^% FiletoHash)
+array<System::Byte>^ Digest::SHA1_Hash_File(System::IO::FileStream^% FiletoHash)
 {
 	try
 	{
@@ -263,7 +263,7 @@ array<System::Byte>^ FileDigest::SHA1_Hash_File(System::IO::FileStream^% FiletoH
 	}
 }
 
-array<System::Byte>^ FileDigest::SHA256_Hash_File(System::IO::FileStream^% FiletoHash)
+array<System::Byte>^ Digest::SHA256_Hash_File(System::IO::FileStream^% FiletoHash)
 {
 	try
 	{
@@ -282,7 +282,7 @@ array<System::Byte>^ FileDigest::SHA256_Hash_File(System::IO::FileStream^% Filet
 	}
 }
 
-array<System::Byte>^ FileDigest::SHA384_Hash_File(System::IO::FileStream^% FiletoHash)
+array<System::Byte>^ Digest::SHA384_Hash_File(System::IO::FileStream^% FiletoHash)
 {
 	try
 	{
@@ -301,7 +301,7 @@ array<System::Byte>^ FileDigest::SHA384_Hash_File(System::IO::FileStream^% Filet
 	}
 }
 
-array<System::Byte>^ FileDigest::SHA512_Hash_File(System::IO::FileStream^% FiletoHash)
+array<System::Byte>^ Digest::SHA512_Hash_File(System::IO::FileStream^% FiletoHash)
 {
 	try
 	{
@@ -320,7 +320,7 @@ array<System::Byte>^ FileDigest::SHA512_Hash_File(System::IO::FileStream^% Filet
 	}
 }
 
-array<System::Byte>^ FileDigest::RIPEMD160_Hash_File(System::IO::FileStream^% FiletoHash)
+array<System::Byte>^ Digest::RIPEMD160_Hash_File(System::IO::FileStream^% FiletoHash)
 {
 	try
 	{
@@ -339,7 +339,7 @@ array<System::Byte>^ FileDigest::RIPEMD160_Hash_File(System::IO::FileStream^% Fi
 	}
 }
 
-System::String^ FileDigest::Format_Hash_to_String(array<System::Byte>^% unformated_hash)
+System::String^ Digest::Format_Hash_to_String(array<System::Byte>^% unformated_hash)
 {
 	try
 	{
@@ -363,6 +363,6 @@ System::String^ FileDigest::Format_Hash_to_String(array<System::Byte>^% unformat
 }
 
 //Let the complier make these
-FileDigest::ErrorStrings::ErrorStrings(){}
+Digest::ErrorStrings::ErrorStrings(){}
 
-FileDigest::ErrorStrings::~ErrorStrings(){}
+Digest::ErrorStrings::~ErrorStrings(){}

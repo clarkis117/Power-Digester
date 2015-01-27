@@ -8,22 +8,17 @@ using namespace System::Management::Automation;
 namespace FileDigester {
 
 	//[CmdletAttribute(VerbsCommon::Get, "HashFromFile")]
-	[Cmdlet(VerbsCommon::Get, "HashFromFile", DefaultParameterSetName = "FilePath")]
-	public ref class FileDigest : public PSCmdlet
+	[Cmdlet(VerbsCommon::Get, "Hash", DefaultParameterSetName = "FilePath")]
+	public ref class Digest : public PSCmdlet
 	{
 
-	public:
-		//Implement two param sets one for a string to file and one for a FileInfo object
-		//Essentally we want pass through of the file info object
-		
+	public:		
 		/*
-		Currently there are four usage senerios in mind for this Cmdlet
-			
-			1. String to a File, FilePath
-			2. FileInfo object, that represents a file
+			Currently there are four usage senerios in mind for this Cmdlet
+			1. String to a File
+			2. FileInfo
 			3. Stream
 			4. Byte Array
-
 		*/
 
 		//Senerio 1, FilePath
@@ -34,7 +29,7 @@ namespace FileDigester {
 		[ValidateNotNullAttribute]
 		property System::String^ FilePath;
 
-		//Senerio 2, FileInfo Object
+		//Senerio 2, FileInfo Object 		//Essentally we want pass through of the file info object
 		[ParameterAttribute(Mandatory = true, Position = 0,
 			ValueFromPipeline = true, ValueFromPipelineByPropertyName = true,
 			HelpMessage = "The File, you want Digest",
@@ -42,10 +37,29 @@ namespace FileDigester {
 		[ValidateNotNullAttribute]
 		property System::IO::FileInfo^ File;
 
+		//Senerio 3, Stream Object
+		[ParameterAttribute(Mandatory = true, Position = 0,
+			ValueFromPipeline = true, ValueFromPipelineByPropertyName = true,
+			HelpMessage = "The Stream, you want Digest",
+			ParameterSetName = "Stream")]
+		[ValidateNotNullAttribute]
+		property System::IO::Stream^ Stream;
+
+		//Senerio 4, Byte Array Object
+		[ParameterAttribute(Mandatory = true, Position = 0,
+			ValueFromPipeline = true, ValueFromPipelineByPropertyName = true,
+			HelpMessage = "The Stream, you want Digest",
+			ParameterSetName = "Stream")]
+		[ValidateNotNullAttribute]
+		property cli::array<System::Byte>^ Bytes;
+
 		[ParameterAttribute(Mandatory = true, Position = 1,
 			HelpMessage = "Hash Algorithm you want to use")]
 		[ValidateNotNullAttribute]
 		property System::String^ HashAlg;
+
+		//Input for hashalg key
+
 
 	protected:
 		//-- These functions represent the life cycle of our cmdlet, They are overriden from the cmdlet class and Called by the Powershell Runtime
@@ -63,7 +77,13 @@ namespace FileDigester {
 		*/
 
 		virtual void BeginProcessing(void) override;
-		//Used for One-time optional pre-processing
+		/*Used for One-time optional pre-processing
+			-In this case begin processing will determine the input senerio
+			-It will validate the arguments with a single input
+				-HashAlg String
+				-HashAlg Key
+
+		*/
 
 		virtual void ProcessRecord(void) override;
 		//Used to provide record by record processing can be called more than one depending on input, if ValueFromPipeline is present

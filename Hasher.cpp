@@ -1,35 +1,47 @@
 #include "Hasher.h"
 
 
-Hasher::Hasher(System::String^% HashAlg, System::IO::Stream^% StreamToHash)
+//-- Class Constructors
+
+Hasher::Hasher(System::String^% HashAlg)
 {
-	//Set the ComputeHash Mode
-	this->StreamMode = true;
+	try
+	{
+		//validate HashAlg String
+		if (!(System::String::IsNullOrEmpty(HashAlg) || System::String::IsNullOrWhiteSpace(HashAlg)))
+		{
+			//Validate Algorithm name, on second thought validation here seems redundant
+			//Check for Null After Setting hash alg
 
-	//Set the Hash Algorithm
-	this->HashAlgorithm = SetHashAlg(HashAlg);
-	
-	//Set HashAlgName
-	this->HashAlgName = HashAlg;
+			//then set algorithm
+		}
 
-	//Set the Variable to be processed
-	this->StreamToHash = StreamToHash;
+		//Set the Hash Algorithm
+		this->HashAlgorithm = SetHashAlg(HashAlg);
+
+		if (this->HashAlgorithm != nullptr)
+		{
+
+		}
+		//Set HashAlgName
+		this->HashAlgName = HashAlg;
+	}
+	catch (System::Exception^ ex)
+	{
+
+	}
 }
 
-Hasher::Hasher(System::String^% HashAlg, array<System::Byte>^% BytesToHash)
+Hasher::Hasher(cli::array<System::Byte>^% Key, System::String^% HashAlgName)
 {
-	//Set the ComputeHash Mode
-	this->ByteMode = true;
+	//Validate HashAlg String
 
-	//Set the Hash Algorithm
-	this->HashAlgorithm = SetHashAlg(HashAlg);
+	//Validate Key
 
-	//Set HashAlgName
-	this->HashAlgName = HashAlg;
-
-	//Set the Variable to be processed
-	this->BytesToHash = BytesToHash;
 }
+
+//-- End Class Constructors
+//-- Update Functions
 
 Hasher^ Hasher::update(System::IO::Stream^% Stream)
 {
@@ -41,42 +53,64 @@ Hasher^ Hasher::update(cli::array<System::Byte>^% Bytes)
 	return this;
 }
 
+Hasher^ Hasher::update(cli::array<System::Byte>^% Key, System::IO::Stream^% StreamToHash)
+{
+	return this;
+}
+
+Hasher^ Hasher::update(cli::array<System::Byte>^% Key, cli::array<System::Byte>^% BytesToHash)
+{
+	return this;
+}
+
+// --End Update Functions
+
 cli::array<System::Byte>^ Hasher::ComputeHash()
 {
 	try
 	{
-		array<System::Byte>^ ComputedHash;
+		array<System::Byte>^ hashcomputed;
 
 		//Determine Input Mode and Compute it
 		if (this->StreamMode)
 		{
-			ComputedHash = this->HashAlgorithm->ComputeHash(this->StreamToHash);
+			hashcomputed = this->HashAlgorithm->ComputeHash(this->StreamToHash);
 		}
 		else if (this->ByteMode)
 		{
-			ComputedHash = this->HashAlgorithm->ComputeHash(this->BytesToHash);
+			hashcomputed = this->HashAlgorithm->ComputeHash(this->BytesToHash);
 		}
 
-		return *this;
+		return ;
 	}
 	catch (System::Exception^ ex)
 	{
-		System::String^ FunctionErrorMessage = this->HashAlgName+" Hash Failed";
+		System::String^ FunctionErrorMessage = this->HashAlgName+"Hash Computation Failed";
 
 		throw gcnew System::Exception(FunctionErrorMessage, ex);
 	}
 }
 
-cli::array<System::Byte>^ Hasher::FormatHash()
+//-- Static Functions
+
+bool Hasher::ValidateHashAlgString(System::String^ HashAlg)
+{
+	array<System::String^>^ HashArgArray
+		= gcnew  array<System::String^>{ "SHA", "SHA1", "System.Security.Cryptography.SHA1",
+										"SHA256", "SHA384", "SHA512", "MD5", "RIPEMD160" };
+	return bool;
+}
+
+System::String^ Hasher::FormatHash(cli::array<System::Byte>^ UnformatedHash)
 {
 	try
 	{
+		//Format the Computed Hash Into a lower case, single String
 		System::String^ FormatedHash = "";
-		System::String^ hash = "";
-
-		for each (System::Byte^ byte in unformated_hash)
+		
+		for each (System::Byte^ byte in UnformatedHash)
 		{
-			hash = byte->ToString("x")->ToLower();
+			System::String^ hash = byte->ToString("x")->ToLower();
 			FormatedHash += (hash->Length == 1 ? "0" : "") + hash;
 		}
 
@@ -90,8 +124,11 @@ cli::array<System::Byte>^ Hasher::FormatHash()
 	}
 }
 
+//-- End Static Functions
+
 System::Security::Cryptography::HashAlgorithm^ Hasher::SetHashAlg(System::String^% NameofHashAlg)
 {
+	//RIPEMD needs seperate mapp
 	System::Security::Cryptography::HashAlgorithm^ Algorithm;
 
 	array<System::String^>^ HashArgArray

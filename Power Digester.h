@@ -105,7 +105,7 @@ namespace FileDigester {
 
 
 		//Normal Hash Algs
-		static array<System::Byte>^ MD5_Hash_File(System::IO::FileStream^% FiletoHash);
+		static array<System::Byte>^ MD5_Hash_File(System::IO::Stream^% FiletoHash);
 		static array<System::Byte>^ RIPEMD160_Hash_File(System::IO::FileStream^% FiletoHash);
 		static array<System::Byte>^ SHA1_Hash_File(System::IO::FileStream^% FiletoHash);
 		static array<System::Byte>^ SHA256_Hash_File(System::IO::FileStream^% FiletoHash);

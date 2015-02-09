@@ -10,14 +10,17 @@ Hasher::Hasher(System::String^% HashAlg)
 		//validate HashAlg String
 		if (!(System::String::IsNullOrEmpty(HashAlg) || System::String::IsNullOrWhiteSpace(HashAlg)))
 		{
-			//Validate Algorithm name, on second thought validation here seems redundant
 			//Check for Null After Setting hash alg
-
+			//Set the Hash Algorithm
+			SetHasherState(HashAlg);
 			//then set algorithm
 		}
+		else
+		{
+			throw gcnew System::ArgumentException("");
+		}
 
-		//Set the Hash Algorithm
-		this->HashAlgorithm = SetHashAlg(HashAlg);
+
 
 		if (this->HashAlgorithm != nullptr)
 		{
@@ -64,7 +67,7 @@ Hasher^ Hasher::update(cli::array<System::Byte>^% Key, cli::array<System::Byte>^
 }
 
 // --End Update Functions
-
+/*
 cli::array<System::Byte>^ Hasher::ComputeHash()
 {
 	try
@@ -90,15 +93,41 @@ cli::array<System::Byte>^ Hasher::ComputeHash()
 		throw gcnew System::Exception(FunctionErrorMessage, ex);
 	}
 }
-
+*/
 //-- Static Functions
 
-bool Hasher::ValidateHashAlgString(System::String^ HashAlg)
+char Hasher::isValidHashAlgString(System::String^ HashAlg)
 {
-	array<System::String^>^ HashArgArray
-		= gcnew  array<System::String^>{ "SHA", "SHA1", "System.Security.Cryptography.SHA1",
-										"SHA256", "SHA384", "SHA512", "MD5", "RIPEMD160" };
-	return bool;
+	try
+	{
+		char isAlgStringValid = false;
+
+		//Check for a normal HashAlg
+		for each (auto algString in NormalHashAlgs)
+		{
+			if (HashAlg == algString)
+			{
+				return isAlgStringValid = 'N';
+			}
+		}
+
+		//Chech for a keyed HashAlg
+		for each (auto algString in KeyedHashAlgs)
+		{
+			if (HashAlg == algString)
+			{
+				return isAlgStringValid = 'K';
+			}
+		}
+
+		return isAlgStringValid;
+	}
+	catch (System::Exception^ ex)
+	{
+		System::String^ FunctionErrorMessage = "Validate HashAlgString Method Failed";
+
+		throw gcnew System::Exception(FunctionErrorMessage, ex);
+	}
 }
 
 System::String^ Hasher::FormatHash(cli::array<System::Byte>^ UnformatedHash)
@@ -126,23 +155,48 @@ System::String^ Hasher::FormatHash(cli::array<System::Byte>^ UnformatedHash)
 
 //-- End Static Functions
 
-System::Security::Cryptography::HashAlgorithm^ Hasher::SetHashAlg(System::String^% NameofHashAlg)
+void Hasher::SetHasherState(System::String^% NameofHashAlg)
 {
-	//RIPEMD needs seperate mapp
-	System::Security::Cryptography::HashAlgorithm^ Algorithm;
-
-	array<System::String^>^ HashArgArray
-		= gcnew  array<System::String^>{ "SHA1", "SHA256", "SHA384", "SHA512", "MD5", "RIPEMD160" };
-	
-	Algorithm = System::Security::Cryptography::MD5::Create();
-
-	if ()
+	try
 	{
+		char alg = isValidHashAlgString(NameofHashAlg);
+
+		if (alg == false)
+		{
+			throw gcnew System::ArgumentException("", NameofHashAlg);
+		}
+		else if (NameofHashAlg == "RIPEMD160" || NameofHashAlg == "System.Security.Cryptography.RIPEMD160") //check for RIPMD160
+		{
+			//set state
+			isUsingKeyedHashAlg = false;
+			//set alg
+			this->HashAlgorithm = gcnew System::Security::Cryptography::RIPEMD160Managed;
+		}
+		else if (alg == 'N')
+		{
+			//set states
+			this->isUsingKeyedHashAlg = false;
+			//set alg
+			this->HashAlgorithm = System::Security::Cryptography::HashAlgorithm::Create(NameofHashAlg);
+		}
+		else if (alg == 'K')
+		{
+			//set state
+			this->isUsingKeyedHashAlg = true;
+			//set alg
+			this->HashAlgorithm = System::Security::Cryptography::HMAC::Create(NameofHashAlg);
+		}
 
 	}
+	catch (System::Exception^ ex)
+	{
+		System::String^ FunctionErrorMessage = "SetHashAlg Failed";
 
+		throw gcnew System::Exception(FunctionErrorMessage, ex);
+	}
 }
 
 Hasher::~Hasher()
 {
+
 }

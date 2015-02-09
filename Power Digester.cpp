@@ -229,7 +229,6 @@ array<System::Byte>^ Digest::MD5_Hash_File(System::IO::Stream^% FiletoHash)
 
 		MD5Hash = HashFunction->ComputeHash(FiletoHash);
 
-		HashFunction->Dispose();
 
 		return MD5Hash;
 	}

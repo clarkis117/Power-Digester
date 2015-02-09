@@ -45,9 +45,17 @@ public:
 		void set(cli::array<System::Byte>^ value) { ComputedHash = value; }
 	}
 
-	static System::String^ FormatHash(cli::array<System::Byte>^);
+	//Property by which the hashed result is accessed
+	property System::String^ AlgName
+	{
+		System::String^ get() { return HashAlgName; }
+		void set(System::String^ value) { HashAlgName = value; }
+	}
 
-	static bool ValidateHashAlgString(System::String^ HashAlg);
+
+	static System::String^ FormatHash(cli::array<System::Byte>^ UnFormatedHash);
+
+	static char isValidHashAlgString(System::String^ HashAlg);
 
 	//Class distructor, any resources used are released by this
 	~Hasher();
@@ -55,27 +63,60 @@ public:
 protected:
 
 	//These will get called by update()
-	cli::array<System::Byte>^ ComputeHash();
+	//cli::array<System::Byte>^ ComputeHash();
 
 private:
 
 	//Constructor set variables
-	System::String^ HashAlgName;
 	System::Security::Cryptography::HashAlgorithm^ HashAlgorithm;
-	System::Security::Cryptography::HashAlgorithm^ SetHashAlg(System::String^% NameofHashAlg);
+	System::Security::Cryptography::HMAC^ HMAC;
+
+	//Distingish between keyed and non-keyed
+	void SetHasherState(System::String^% NameofHashAlg);
 
 	//Class State Information
-	bool Keyed_HashAlg;
+	bool isUsingKeyedHashAlg;
 	bool ByteMode;
 	bool StreamMode;
 
 	//Internal Types accessed by the class properties
+	System::String^ HashAlgName;
 	cli::array<System::Byte>^ ComputedHash;
 	cli::array<System::Byte>^ Key;
 
+	//Static hash alg name arrays
+	static array<System::String^>^ KeyedHashAlgs = { "System.Security.Cryptography.HMAC",
+		"System.Security.Cryptography.KeyedHashAlgorithm",
+		"HMACMD5",
+		"System.Security.Cryptography.HMACMD5",
+		"HMACRIPEMD160",
+		"System.Security.Cryptography.HMACRIPEMD160",
+		"HMACSHA1",
+		"System.Security.Cryptography.HMACSHA1",
+		"HMACSHA256",
+		"System.Security.Cryptography.HMACSHA256",
+		"HMACSHA384",
+		"System.Security.Cryptography.HMACSHA384",
+		"HMACSHA512",
+		"System.Security.Cryptography.HMACSHA512",
+		"MACTripleDES",
+		"System.Security.Cryptography.MACTripleDES" };
 
-
-	System::IO::Stream^ StreamToHash;
-
-	array<System::Byte>^ BytesToHash;
+	static array<System::String^>^ NormalHashAlgs = { "RIPEMD160",
+		"System.Security.Cryptography.RIPEMD160",
+		"SHA",
+		"SHA1",
+		"System.Security.Cryptography.SHA1",
+		"System.Security.Cryptography.HashAlgorithm",
+		"MD5",
+		"System.Security.Cryptography.MD5",
+		"SHA256",
+		"SHA-256",
+		"System.Security.Cryptography.SHA256",
+		"SHA384",
+		"SHA-384",
+		"System.Security.Cryptography.SHA384",
+		"SHA512",
+		"SHA-512",
+		"System.Security.Cryptography.SHA512" };
 };

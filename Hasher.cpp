@@ -48,6 +48,8 @@ Hasher::Hasher(cli::array<System::Byte>^% Key, System::String^% HashAlgName)
 
 Hasher^ Hasher::update(System::IO::Stream^% Stream)
 {
+	System::IO::Stream^ hi = gcnew System::IO::FileStream(System::IO::File::Create("tst"));
+	this->update(hi);
 	return this;
 }
 

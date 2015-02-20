@@ -10,11 +10,16 @@
 		-MACTRIPLEDES
 */
 
+/*
+	Note make a wrapper around SetState, that returns bool
+	make this new function the static validate function
+*/
+
 ref class Hasher : public System::Object
 {
 
 public:
-
+	
 	//Class Constructor Takes Name Sets Hash Algorithm
 	Hasher( System::String^% HashAlgName );
 
@@ -31,7 +36,7 @@ public:
 	Hasher^ update( cli::array<System::Byte>^% Key, cli::array<System::Byte>^% BytesToHash );
 
 	//Property by which the key result is accessed
-	property cli::array<System::Byte>^ key
+	property cli::array<System::Byte>^ Key
 	{
 		//If not a keyed hash alg then key returns null
 		cli::array<System::Byte>^ get() { return Key; }
@@ -39,7 +44,7 @@ public:
 	}
 
 	//Property by which the hashed result is accessed
-	property cli::array<System::Byte>^ value
+	property cli::array<System::Byte>^ Value
 	{
 		cli::array<System::Byte>^ get() { return ComputedHash; }
 		void set(cli::array<System::Byte>^ value) { ComputedHash = value; }

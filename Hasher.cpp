@@ -48,9 +48,17 @@ Hasher::Hasher(cli::array<System::Byte>^% Key, System::String^% HashAlgName)
 
 Hasher^ Hasher::update(System::IO::Stream^% Stream)
 {
-	System::IO::Stream^ hi = gcnew System::IO::FileStream(System::IO::File::Create("tst"));
-	this->update(hi);
-	return this;
+	try
+	{
+
+		return this;
+	}
+	catch (System::Exception^ ex)
+	{
+		System::String^ FunctionErrorMessage = "" + ex->Message;
+
+		throw gcnew System::Exception(FunctionErrorMessage, ex);
+	}
 }
 
 Hasher^ Hasher::update(cli::array<System::Byte>^% Bytes)
@@ -100,10 +108,30 @@ cli::array<System::Byte>^ Hasher::ComputeHash()
 
 char Hasher::isValidHashAlgString(System::String^ HashAlg)
 {
+	//For loops in this case are faster than the foreach loop since the arrays are only accessed once
 	try
 	{
 		char isAlgStringValid = false;
 
+		//Check for a normal HashAlg
+		for (int i = 0; i < NormalHashAlgs->Length; ++i)
+		{
+			if (HashAlg == NormalHashAlgs[i])
+			{
+				return isAlgStringValid = 'N';
+			}
+		}
+
+		//Check for a keyed HashAlg
+		for (int i = 0; i < KeyedHashAlgs->Length; ++i)
+		{
+			if (HashAlg == KeyedHashAlgs[i])
+			{
+				return isAlgStringValid = 'K';
+			}
+		}
+
+		/*
 		//Check for a normal HashAlg
 		for each (auto algString in NormalHashAlgs)
 		{
@@ -121,12 +149,13 @@ char Hasher::isValidHashAlgString(System::String^ HashAlg)
 				return isAlgStringValid = 'K';
 			}
 		}
+		*/
 
 		return isAlgStringValid;
 	}
 	catch (System::Exception^ ex)
 	{
-		System::String^ FunctionErrorMessage = "Validate HashAlgString Method Failed";
+		System::String^ FunctionErrorMessage = "Validate HashAlgString Method Failed: "+ ex->Message;
 
 		throw gcnew System::Exception(FunctionErrorMessage, ex);
 	}
@@ -139,9 +168,17 @@ System::String^ Hasher::FormatHash(cli::array<System::Byte>^ UnformatedHash)
 		//Format the Computed Hash Into a lower case, single String
 		System::String^ FormatedHash = "";
 		
-		for each (System::Byte^ byte in UnformatedHash)
+		/*
+		for (size_t i = 0; i < UnformatedHash->Length; ++i)
 		{
-			System::String^ hash = byte->ToString("x")->ToLower();
+			System::String^ hash = UnformatedHash[i].ToString("x")->ToLower();
+			FormatedHash += (hash->Length == 1 ? "0" : "") + hash;
+		}
+		*/
+
+		for each (auto byte in UnformatedHash)
+		{
+			System::String^ hash = byte.ToString("x")->ToLower();
 			FormatedHash += (hash->Length == 1 ? "0" : "") + hash;
 		}
 
@@ -149,7 +186,7 @@ System::String^ Hasher::FormatHash(cli::array<System::Byte>^ UnformatedHash)
 	}
 	catch (System::Exception^ ex)
 	{
-		System::String^ FunctionErrorMessage = "Format Hash to String Failed";
+		System::String^ FunctionErrorMessage = "Format Hash to String Method Failed: "+ ex->Message;
 
 		throw gcnew System::Exception(FunctionErrorMessage, ex);
 	}
@@ -161,38 +198,55 @@ void Hasher::SetHasherState(System::String^% NameofHashAlg)
 {
 	try
 	{
-		char alg = isValidHashAlgString(NameofHashAlg);
+		//validate args
+		if (!(System::String::IsNullOrEmpty(NameofHashAlg) || System::String::IsNullOrWhiteSpace(NameofHashAlg)))
+		{
+			//check for RIPEMD160
+			if ((NameofHashAlg == "RIPEMD160") || (NameofHashAlg == "System.Security.Cryptography.RIPEMD160"))
+			{
+				//set state
+				isUsingKeyedHashAlg = false;
+				//set alg
+				this->HashAlgorithm = gcnew System::Security::Cryptography::RIPEMD160Managed;
+			}
+			else
+			{
+				char alg = isValidHashAlgString(NameofHashAlg);
 
-		if (alg == false)
-		{
-			throw gcnew System::ArgumentException("", NameofHashAlg);
-		}
-		else if (NameofHashAlg == "RIPEMD160" || NameofHashAlg == "System.Security.Cryptography.RIPEMD160") //check for RIPMD160
-		{
-			//set state
-			isUsingKeyedHashAlg = false;
-			//set alg
-			this->HashAlgorithm = gcnew System::Security::Cryptography::RIPEMD160Managed;
-		}
-		else if (alg == 'N')
-		{
-			//set states
-			this->isUsingKeyedHashAlg = false;
-			//set alg
-			this->HashAlgorithm = System::Security::Cryptography::HashAlgorithm::Create(NameofHashAlg);
-		}
-		else if (alg == 'K')
-		{
-			//set state
-			this->isUsingKeyedHashAlg = true;
-			//set alg
-			this->HashAlgorithm = System::Security::Cryptography::HMAC::Create(NameofHashAlg);
-		}
+				if (alg == 'N')
+				{
+					//set states
+					this->isUsingKeyedHashAlg = false;
+					//set alg
+					this->HashAlgorithm = System::Security::Cryptography::HashAlgorithm::Create(NameofHashAlg);
+				}
+				else if (alg == 'K')
+				{
+					//set state
+					this->isUsingKeyedHashAlg = true;
+					//set alg
+					this->HashAlgorithm = System::Security::Cryptography::KeyedHashAlgorithm::Create(NameofHashAlg);
+				}
+				else
+				{
+					//throw argument exception
+					System::String^ ErrorMessage = "HashAlg does not match a supported Algoritm";
 
+					throw gcnew System::ArgumentException(ErrorMessage, NameofHashAlg);
+				}
+			}
+		}
+		else 		//check for easy construction
+		{
+			//throw argument execption
+			System::String^ ErrorMessage = "Argument is not Valid";
+
+			throw gcnew System::ArgumentException(ErrorMessage, NameofHashAlg);
+		}
 	}
 	catch (System::Exception^ ex)
 	{
-		System::String^ FunctionErrorMessage = "SetHashAlg Failed";
+		System::String^ FunctionErrorMessage = "SetHashAlg Method Failed: " + ex->Message;
 
 		throw gcnew System::Exception(FunctionErrorMessage, ex);
 	}

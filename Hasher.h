@@ -51,7 +51,7 @@ public:
 	}
 
 	//Property by which the hashed result is accessed
-	property System::String^ AlgName
+	property System::String^ AlgorithmName
 	{
 		System::String^ get() { return HashAlgName; }
 		void set(System::String^ value) { HashAlgName = value; }
@@ -74,7 +74,7 @@ private:
 
 	//Constructor set variables
 	System::Security::Cryptography::HashAlgorithm^ HashAlgorithm;
-	System::Security::Cryptography::HMAC^ HMAC;
+	System::Security::Cryptography::KeyedHashAlgorithm^ HMAC;
 
 	//Distingish between keyed and non-keyed
 	void SetHasherState(System::String^% NameofHashAlg);
@@ -89,7 +89,7 @@ private:
 	cli::array<System::Byte>^ ComputedHash;
 	cli::array<System::Byte>^ Key;
 
-	//Static hash alg name arrays
+	//Static hash alg name arrays, Contains The valid list of constructor strings
 	static array<System::String^>^ KeyedHashAlgs = { "System.Security.Cryptography.HMAC",
 		"System.Security.Cryptography.KeyedHashAlgorithm",
 		"HMACMD5",

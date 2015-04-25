@@ -39,8 +39,8 @@ public:
 	property cli::array<System::Byte>^ Key
 	{
 		//If not a keyed hash alg then key returns null
-		cli::array<System::Byte>^ get() { return Key; }
-		void set(cli::array<System::Byte>^ value) { Key = value; }
+		cli::array<System::Byte>^ get() { return HMACkey; }
+		void set(cli::array<System::Byte>^ value) { HMACkey = value; }
 	}
 
 	//Property by which the hashed result is accessed
@@ -58,7 +58,7 @@ public:
 	}
 
 
-	static System::String^ FormatHash(cli::array<System::Byte>^ UnFormatedHash);
+	static System::String^ formatHashAsString(cli::array<System::Byte>^ UnFormatedHash);
 
 	static char isValidHashAlgString(System::String^ HashAlg);
 
@@ -72,22 +72,22 @@ protected:
 
 private:
 
-	//Constructor set variables
-	System::Security::Cryptography::HashAlgorithm^ HashAlgorithm;
-	System::Security::Cryptography::KeyedHashAlgorithm^ HMAC;
+	//Internal Properties
+	property System::Security::Cryptography::HashAlgorithm^ HashAlgorithm;
+	property System::Security::Cryptography::KeyedHashAlgorithm^ HMAC;
+	property bool isUsingKeyedHashAlg;
 
 	//Distingish between keyed and non-keyed
-	void SetHasherState(System::String^% NameofHashAlg);
+	void setHasherStateAndMode(System::String^% NameofHashAlg);
 
 	//Class State Information
-	bool isUsingKeyedHashAlg;
 	bool ByteMode;
 	bool StreamMode;
 
-	//Internal Types accessed by the class properties
+	//Internal Types accessed by the class's public properties
 	System::String^ HashAlgName;
 	cli::array<System::Byte>^ ComputedHash;
-	cli::array<System::Byte>^ Key;
+	cli::array<System::Byte>^ HMACkey;
 
 	//Static hash alg name arrays, Contains The valid list of constructor strings
 	static array<System::String^>^ KeyedHashAlgs = { "System.Security.Cryptography.HMAC",

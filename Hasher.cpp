@@ -3,77 +3,162 @@
 
 //-- Class Constructors
 
-Hasher::Hasher(System::String^% HashAlg)
+Hasher::Hasher(System::String^% HashAlgName)
 {
 	try
 	{
-		//validate HashAlg String
-		if (!(System::String::IsNullOrEmpty(HashAlg) || System::String::IsNullOrWhiteSpace(HashAlg)))
+		if (!(System::String::IsNullOrEmpty(HashAlgName) || System::String::IsNullOrWhiteSpace(HashAlgName)))
 		{
-			//Check for Null After Setting hash alg
-			//Set the Hash Algorithm
-			SetHasherState(HashAlg);
-			//then set algorithm
+			//Set Hasher State
+			setHasherStateAndMode(HashAlgName);
 		}
 		else
 		{
-			throw gcnew System::ArgumentException("");
+			throw gcnew System::ArgumentNullException("HashAlgName");
 		}
-
-
-
-		if (this->HashAlgorithm != nullptr)
-		{
-
-		}
-		//Set HashAlgName
-		this->HashAlgName = HashAlg;
 	}
 	catch (System::Exception^ ex)
 	{
-
-	}
-}
-
-Hasher::Hasher(cli::array<System::Byte>^% Key, System::String^% HashAlgName)
-{
-	//Validate HashAlg String
-
-	//Validate Key
-
-}
-
-//-- End Class Constructors
-//-- Update Functions
-
-Hasher^ Hasher::update(System::IO::Stream^% Stream)
-{
-	try
-	{
-
-		return this;
-	}
-	catch (System::Exception^ ex)
-	{
-		System::String^ FunctionErrorMessage = "" + ex->Message;
+		System::String^ FunctionErrorMessage = "Hasher: " + ex->Message;
 
 		throw gcnew System::Exception(FunctionErrorMessage, ex);
 	}
 }
 
+Hasher::Hasher(cli::array<System::Byte>^% Key, System::String^% HashAlgName)
+{
+	try
+	{
+		if (!(System::String::IsNullOrEmpty(HashAlgName) || System::String::IsNullOrWhiteSpace(HashAlgName)))
+		{
+			//Set Hasher State
+			setHasherStateAndMode(HashAlgName);
+			
+			//check and set keyed algorithm
+			if ((!(Key == nullptr)) && isUsingKeyedHashAlg)
+			{
+				//Set Key
+				this->Key = Key;
+
+				this->HMAC->Key = this->Key;
+			}
+			else
+			{
+				throw gcnew System::ArgumentNullException("Key");
+			}
+		}
+		else
+		{
+			throw gcnew System::ArgumentNullException("HashAlgName");
+		}
+	}
+	catch (System::Exception^ ex)
+	{
+		System::String^ FunctionErrorMessage = "Hasher: " + ex->Message;
+
+		throw gcnew System::Exception(FunctionErrorMessage, ex);
+	}
+}
+
+//-- End Class Constructors
+//-- Update Functions
+
+//Sets Value, computes hash
+Hasher^ Hasher::update(System::IO::Stream^% Stream)
+{
+	try
+	{
+		if (!(Stream == nullptr))
+		{
+			if (Stream->CanRead)
+			{
+				if (isUsingKeyedHashAlg)
+				{
+					if (!(this->Key == nullptr))
+					{
+						this->Value = this->HMAC->ComputeHash(Stream);
+					}
+					else
+					{
+						throw gcnew System::ArgumentException("Cannot compute hash with null Key", "Property Key");
+					}
+				}
+				else
+				{
+					this->Value = this->HashAlgorithm->ComputeHash(Stream);
+				}
+			}
+			else
+			{
+				throw gcnew System::ArgumentException("Cannot Read Stream", Stream->GetType()->ToString());
+			}
+		}
+		else
+		{
+			throw gcnew System::ArgumentNullException("Stream");
+		}
+		//Compute Hash and Set Value
+
+		return this;
+	}
+	catch (System::Exception^ ex)
+	{
+		System::String^ FunctionErrorMessage = "Hasher Update: " + ex->Message;
+
+		throw gcnew System::Exception(FunctionErrorMessage, ex);
+	}
+}
+
+//Sets Value, computes hash
 Hasher^ Hasher::update(cli::array<System::Byte>^% Bytes)
 {
-	return this;
+	try
+	{
+		//Compute Hash and Set Value
+
+		return this;
+	}
+	catch (System::Exception^ ex)
+	{
+		System::String^ FunctionErrorMessage = "Hasher Update: " + ex->Message;
+
+		throw gcnew System::Exception(FunctionErrorMessage, ex);
+	}
 }
 
+//Sets Value, computes hash
 Hasher^ Hasher::update(cli::array<System::Byte>^% Key, System::IO::Stream^% StreamToHash)
 {
-	return this;
+	try
+	{
+		//Compute Hash and Set Value
+
+		return this;
+	}
+	catch (System::Exception^ ex)
+	{
+		System::String^ FunctionErrorMessage = "Hasher Update: " + ex->Message;
+
+		throw gcnew System::Exception(FunctionErrorMessage, ex);
+	}
 }
 
+//Sets Value, Computes hash
 Hasher^ Hasher::update(cli::array<System::Byte>^% Key, cli::array<System::Byte>^% BytesToHash)
 {
-	return this;
+	try
+	{
+		//Compute Hash and Set Value
+		this->HashAlgorithm;
+
+		return this;
+	}
+	catch (System::Exception^ ex)
+	{
+		System::String^ FunctionErrorMessage = "Hasher Update: " + ex->Message;
+
+		throw gcnew System::Exception(FunctionErrorMessage, ex);
+	}
 }
 
 // --End Update Functions
@@ -104,6 +189,7 @@ cli::array<System::Byte>^ Hasher::ComputeHash()
 	}
 }
 */
+
 //-- Static Functions
 
 char Hasher::isValidHashAlgString(System::String^ HashAlg)
@@ -161,7 +247,7 @@ char Hasher::isValidHashAlgString(System::String^ HashAlg)
 	}
 }
 
-System::String^ Hasher::FormatHash(cli::array<System::Byte>^ UnformatedHash)
+System::String^ Hasher::formatHashAsString(cli::array<System::Byte>^ UnformatedHash)
 {
 	try
 	{
@@ -194,7 +280,8 @@ System::String^ Hasher::FormatHash(cli::array<System::Byte>^ UnformatedHash)
 
 //-- End Static Functions
 
-void Hasher::SetHasherState(System::String^% NameofHashAlg)
+//Sets Name, Algorithm, Mode
+void Hasher::setHasherStateAndMode(System::String^% NameofHashAlg)
 {
 	try
 	{
@@ -202,10 +289,11 @@ void Hasher::SetHasherState(System::String^% NameofHashAlg)
 		if (!(System::String::IsNullOrEmpty(NameofHashAlg) || System::String::IsNullOrWhiteSpace(NameofHashAlg)))
 		{
 			//check for RIPEMD160
-			if ((NameofHashAlg == "RIPEMD160") || (NameofHashAlg == "System.Security.Cryptography.RIPEMD160"))
+			if ((NameofHashAlg->ToUpper() == "RIPEMD160") || (NameofHashAlg == "System.Security.Cryptography.RIPEMD160"))
 			{
 				//set state
 				isUsingKeyedHashAlg = false;
+
 				//set alg
 				this->HashAlgorithm = gcnew System::Security::Cryptography::RIPEMD160Managed;
 			}
@@ -217,6 +305,7 @@ void Hasher::SetHasherState(System::String^% NameofHashAlg)
 				{
 					//set states
 					this->isUsingKeyedHashAlg = false;
+
 					//set alg
 					this->HashAlgorithm = System::Security::Cryptography::HashAlgorithm::Create(NameofHashAlg);
 				}
@@ -224,8 +313,9 @@ void Hasher::SetHasherState(System::String^% NameofHashAlg)
 				{
 					//set state
 					this->isUsingKeyedHashAlg = true;
+
 					//set alg
-					this->HashAlgorithm = System::Security::Cryptography::KeyedHashAlgorithm::Create(NameofHashAlg);
+					this->HMAC = System::Security::Cryptography::KeyedHashAlgorithm::Create(NameofHashAlg);
 				}
 				else
 				{
@@ -234,6 +324,9 @@ void Hasher::SetHasherState(System::String^% NameofHashAlg)
 
 					throw gcnew System::ArgumentException(ErrorMessage, NameofHashAlg);
 				}
+
+				//Set Name
+				this->AlgorithmName = NameofHashAlg;
 			}
 		}
 		else 		//check for easy construction
@@ -246,7 +339,7 @@ void Hasher::SetHasherState(System::String^% NameofHashAlg)
 	}
 	catch (System::Exception^ ex)
 	{
-		System::String^ FunctionErrorMessage = "SetHashAlg Method Failed: " + ex->Message;
+		System::String^ FunctionErrorMessage = "SetHashAlgStateAndMode Method Failed: " + ex->Message;
 
 		throw gcnew System::Exception(FunctionErrorMessage, ex);
 	}

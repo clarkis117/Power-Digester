@@ -1,5 +1,5 @@
 #pragma once
-
+#include "AbstractHasher.h"
 //byte[] hash = new Hasher("sha256").update(data).value;
 
 /*
@@ -15,7 +15,7 @@
 	make this new function the static validate function
 */
 
-ref class Hasher : public System::Object
+ref class Hasher : AbstractHasher
 {
 
 public:
@@ -68,7 +68,7 @@ public:
 protected:
 
 	//These will get called by update()
-	//cli::array<System::Byte>^ ComputeHash();
+	virtual cli::array<System::Byte>^ ComputeHash();
 
 private:
 

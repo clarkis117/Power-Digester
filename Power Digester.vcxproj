@@ -137,6 +137,7 @@
     <ClCompile Include="Power Digester.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractHasher.h" />
     <ClInclude Include="Hasher.h" />
     <ClInclude Include="Power Digester.h" />
     <ClInclude Include="resource.h" />
@@ -145,6 +146,7 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System" />
     <Reference Include="System.Management.Automation">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
       <Private>true</Private>
